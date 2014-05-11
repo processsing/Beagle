@@ -1,0 +1,14 @@
+from UniversalAnalytics import Tracker
+
+CUSTOMER_UNIQUE_ID = 85586043
+DEBUG = True
+
+if DEBUG: # these are optional...
+      from UniversalAnalytics import HTTPLog
+      HTTPLog.consume() # Filters urllib2's standard debugging for readability
+      Tracker.HTTPPost.debug() # Enables debugging in urllib2
+
+
+tracker = Tracker.create('UA-50616253-4', name='testtracker', client_id = CUSTOMER_UNIQUE_ID)
+tracker.send('event', 'Hello guys', 'great test')
+tracker.send('event', '2nd event', 'another great test')
