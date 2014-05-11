@@ -1,0 +1,50 @@
+System description
+ 
+
+The system is composed by a central Beaglebone Black, a number of remote satellites and an internet uplink to push data gathered from the sensors through internet. The radio link between sensors and central BBB is provided by next generation Bluetooth 4.0 modules. The sensors are powered with simple and cheap button coins batteries, BLE technology warranty less power consumption than predecessors.
+
+On BBB there is a daemon running gathering data asynchronously, it will transform the payload to be transmitted with a python script to the Google GA front-end server. The sensor needs to keep its sensor data until the BLE radio link become available due the typical short bluetooth range field.
+
+Good installation strategy includes putting the BBB BLE receiver close to the gates where all the shopping carts pass. BBB needs onsite internet connectivity and power supply from the electrical grid.
+Remote sensor
+
+The remote sensor is composed by several devices assembled on a custom PCB board, main module is the BLE Bluetooth 4.0 radio module BLE113 by Bluegiga.
+
+https://www.bluegiga.com/en-US/products/bluetooth-4.0-modules/ble113-bluetooth--smart-module/
+
+it offers several benefits including:
+
+embedded CPU
+Integrated ceramic chip
+Typical line-of-sight range 30 - 100 meters
+GPIO I/O
+ADC inputs
+I2C bus
+SPI bus
+low power 
+high integration
+tiny small factor
+
+Another component added to the sensor board is the accelerometer, used to trigger movement events and to wake up the CPU. The CPU will store these events inside its memory to transmit them to the central unit as soon the radio link become available.
+
+
+Central unit 
+
+The central unit is provided by a Beaglebone Black  with a USB BLE 4.0 dongle. The purpose is gathering data from the sensors and pack the payload to be pushed to the google analytics API.
+
+The software:
+
+A main daemon listening for bluetooth events.
+A Python script will pack the data and it will send everything to the GA API
+
+The logic:
+
+receive the bluetooth advertises 
+process the received small payload to extract timings events
+call the python script to transmit events
+
+The central unit can manages virtually an infinite number of remote sensors because they are almost never active at the same time. The sensor is able to manage a remote queue and a waiting status to transmit its data when central station is available.
+ 
+Cost Component for mass production 
+
+The power supply is provide by a 3V coin cell battery, cheap and easy to buy because common commodity battery, the sensor is very cheap as well keeping its cost under 20 USD each for a medium factory production (100 pieces), for a massive production the cost could be reduced to 12-13 USD each, prices provided could change.
